@@ -21,6 +21,7 @@ const Modal = (props) => {
             tag : enteredTag.current.value,
         }
         props.onFinalUpdate(image);
+        props.hideModal();
     }
     
     const showDeleteModalHandler = () => {

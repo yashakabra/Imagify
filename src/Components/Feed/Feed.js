@@ -63,7 +63,7 @@ const Feed = (props) => {
 
     useEffect(()=>{
         fetchImageHandler();
-    }, [fetchImageHandler]);
+    }, [fetchImageHandler, modal]);
 
     const closeHandler = () => {
         setModal(false);
