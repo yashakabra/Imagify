@@ -1,7 +1,7 @@
 import { getMetadata } from "firebase/storage";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "./Image";
-import Modal from "./Modal";
+import Modal from "./Modals/Modal";
 import { set } from "firebase/database";
 import { ref } from "firebase/database";
 import { db } from "../../firebase";
@@ -89,8 +89,8 @@ const Feed = (props) => {
     }
 
     return (
-        <div>
-            <div className="container">
+        <div >
+            <div className="container-fluid">
                 <div className="row">
                     {imagesArr.map((obj) => {
                         return (

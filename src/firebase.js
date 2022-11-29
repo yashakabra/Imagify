@@ -23,3 +23,7 @@ const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 const analytics = getAnalytics(app);
 export const storage = getStorage(app);
+
+// NOTES
+// Firebase ko yha use krne k doo tgareeke h, ek to ye wla ek oor h jisme hum function bnate h oor firebase ko export krte h
+// 

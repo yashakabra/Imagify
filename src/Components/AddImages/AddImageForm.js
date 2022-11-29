@@ -3,6 +3,9 @@ import { storage } from "../../firebase";
 import { getStorage, ref, getDownloadURL, uploadBytes, uploadBytesResumable} from "firebase/storage";
 const AddImageForm = (props) => {
 
+    // The set timeout function if used with useState variable will take the old value not the newer value, but with useRef it takes the newer value.
+
+
     const [image, setImage] = useState('');
     const enteredAuthor = useRef();
     const enteredDescription = useRef();
@@ -26,12 +29,13 @@ const AddImageForm = (props) => {
         const uploadTask = uploadBytesResumable(refr, image, metadata);
         uploadTask.on('state_changed',
             (snapshot) => {
+                // Here mostly we take snapshots of the process, mtlb agr progress bar banani h then this is best.
             },
             (error) => {
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    console.log(enteredAuthor.current.value, enteredDescription.current.value, enteredName.current.value, enteredTag.current.value, url);
+                    // console.log(enteredAuthor.current.value, enteredDescription.current.value, enteredName.current.value, enteredTag.current.value, url);
                     const image = {
                         name : enteredName.current.value,
                         description : enteredDescription.current.value,
