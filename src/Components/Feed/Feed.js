@@ -6,6 +6,7 @@ import { set } from "firebase/database";
 import { ref } from "firebase/database";
 import { db } from "../../firebase";
 import { remove } from "firebase/database";
+
 const initObj = {
     id : null,
     name : null,
@@ -21,7 +22,6 @@ const Feed = (props) => {
     const [imagesArr, setImagesArr] = useState([]);
     const [modal, setModal] = useState(false);
     const [modalData, setModalData] = useState(initObj);
-    const [updateData, setUpdatedata] = useState(false);
 
     const getData = (imageObj) => {
         let tempObj = imageObj;
@@ -31,16 +31,38 @@ const Feed = (props) => {
     }
 
     const deleteHandler = () => {
-        console.log("DELETEEE");
         remove(ref(db, `images/${modalData.uid}`));
     }
 
+    const closeHandler = () => {
+        setModal(false);
+    }
+
+    const finalUpdateHandler = (image) => {
+        set(ref(db, `images/${modalData.uid}`),{
+            name : image.name,
+            description : image.description,
+            tag : image.tag,
+            author : image.author,
+            url : modalData.imageurl,
+            key : modalData.id
+        });
+        setModal(false);
+    }
+
+    // useCallBack also usses dependencies, here we list dependencies that this function might have
+    // state updating function dont needed to be added as dependencies
+
+    // Here we used useCallback coz we dont want the fetch function to render everytime unnessasry.
+
     const fetchImageHandler = useCallback(async () => {
+        console.log("INSIDE USECALLBACK");
         try{
             const response = await fetch('https://reacthttp-d289b-default-rtdb.firebaseio.com/images.json');
             if(!response.ok){
                 throw new Error('Something fucked up !');
             }
+            
             const data = await response.json();
 
             const loadedImages = [];
@@ -59,34 +81,13 @@ const Feed = (props) => {
         }catch(error){
             
         }
-    },[]);
+    },[modal]);
 
+    // Yha pr humne dependency m fetchMoviesHandler islie dalla h coz fetchMovies handler m agr koi external state h jo ki chnage ho rha h the hmra function bhi chnage hoga nd tb we wnat ki ye handler dobara execute ho.
     useEffect(()=>{
+        console.log("INSIDE USEEFFECT");
         fetchImageHandler();
-    }, [fetchImageHandler, modal]);
-
-    const closeHandler = () => {
-        setModal(false);
-        setUpdatedata(false);
-    }
-
-    const updateHandler = () => {
-        setUpdatedata(true);
-    }
-
-    const finalUpdateHandler = (image) => {
-        console.log("BEFORE SET");
-        console.log(image.name, image.description, image.tag, image.author);
-        set(ref(db, `images/${modalData.uid}`),{
-            name : image.name,
-            description : image.description,
-            tag : image.tag,
-            author : image.author,
-            url : modalData.imageurl,
-            key : modalData.id
-        });
-        console.log("UPDATED");
-    }
+    }, [fetchImageHandler, ]);
 
     return (
         <div >
@@ -103,8 +104,9 @@ const Feed = (props) => {
                     })}
                 </div>
             </div>
-            {modal && <Modal deleteImage={deleteHandler} hideModal={()=>{setModal(false)}} onClose={closeHandler} onUpdate={updateHandler} item={modalData} update={updateData} onFinalUpdate = {finalUpdateHandler}/>}
+            {modal && <Modal deleteImage={deleteHandler} onClose={closeHandler} item={modalData} onFinalUpdate = {finalUpdateHandler}/>}
         </div>
     );
 }
+
 export default Feed;

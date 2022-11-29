@@ -5,14 +5,37 @@ import DeleteModal from "./DeleteModal";
 
 const Modal = (props) => {
 
+    let modalStyle = {
+        display : 'block',
+        backgroundColor : 'rgba(0,0,0,0.8)',
+    }
+
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showForm, setShowForm] = useState(false);
 
     const enteredAuthor = useRef();
     const enteredDescription = useRef();
     const enteredName = useRef();
     const enteredTag = useRef();
 
-    const submitHandler = () => {
+    const updateHandler = () => {
+        setShowForm(true);
+    }
+
+    const showDeleteModalHandler = () => {
+        setShowDeleteModal(true);
+    }
+
+    const confirmDeleteHandler = () => {
+        setShowDeleteModal(false);
+        props.deleteImage();
+    }
+
+    const closeDeleteModalHandler = () => {
+        setShowDeleteModal(false);
+    }
+
+    const submitHandler = (event) => {
         event.preventDefault();
         const image = {
             name : enteredName.current.value,
@@ -21,25 +44,6 @@ const Modal = (props) => {
             tag : enteredTag.current.value,
         }
         props.onFinalUpdate(image);
-        props.hideModal();
-    }
-    
-    const showDeleteModalHandler = () => {
-        setShowDeleteModal(true);
-    }
-
-    const confirmDeleteHandler = () => {
-        setShowDeleteModal(false);
-        props.deleteImage();
-        props.hideModal();
-    }
-
-    const closeDeleteModalHandler = () => {
-        setShowDeleteModal(false);
-    }
-    let modalStyle = {
-        display : 'block',
-        backgroundColor : 'rgba(0,0,0,0.8)',
     }
         
     return (
@@ -59,7 +63,7 @@ const Modal = (props) => {
                             <h4>Tags :</h4>
                             <p>{props.item.tag
                             }</p>
-                            {props.update && (<div>
+                            {showForm && (<div>
                                 <form onSubmit={submitHandler}>
                                     <div class="mb-3">
                                         <label for="exampleInputEmail1" class="form-label">Name</label>
@@ -91,9 +95,9 @@ const Modal = (props) => {
                             </div>)}
                         </div>
                         <div className="modal-footer">
-                            {!props.update && <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={showDeleteModalHandler} >Delete</button>}
+                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={showDeleteModalHandler} >Delete</button>
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={props.onClose}>Close</button>
-                            {!props.update && <button type="button" className="btn btn-primary" onClick={props.onUpdate}>Update</button>}
+                            {!showForm && <button type="button" className="btn btn-primary" onClick={updateHandler}>Update</button>}
                         </div>
                     </div>
                 </div>
