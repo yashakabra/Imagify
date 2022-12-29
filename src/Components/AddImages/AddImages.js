@@ -27,7 +27,9 @@ const AddImages = (props) => {
         });
         setIsEditing(false);
     }
+    
 
+    
     const showFormHandler = (event) => {
         if(isEditing === true)
             setIsEditing(false);
