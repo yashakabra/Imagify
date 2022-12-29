@@ -54,7 +54,10 @@ const Feed = (props) => {
     // state updating function dont needed to be added as dependencies
 
     // Here we used useCallback coz we dont want the fetch function to render everytime unnessasry.
-
+    // first -> simply useCallback k andr ek function dalna hota h vo hmne dall dia,
+    // second -> vo function hamara async hona chahiye coz uske andr hme await use krna h
+    // third -> await use best try catch k saath hota h..
+    // fourth -> fetch api ya axios promise return krte h to usko handle krna hota h.
     const fetchImageHandler = useCallback(async () => {
         console.log("INSIDE USECALLBACK");
         try{
@@ -66,6 +69,7 @@ const Feed = (props) => {
             const data = await response.json();
 
             const loadedImages = [];
+            // yha ko key hoti h vo firebase m to vhi exact ajeeb sa node hota h.
             for(const key in data){
                 loadedImages.push({
                     id : data[key].key,
